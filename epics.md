@@ -20,3 +20,8 @@
 
 ## Epic 5: Meeting Visibility
 - Story #9: View Recurring Meetings (Employee)
+
+# Epic: Admin Management System
+
+## Epic 1: Dashboard and Reporting
+- Story #10: Admin Dashboard Viewing
