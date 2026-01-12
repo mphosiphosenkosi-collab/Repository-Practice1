@@ -35,3 +35,7 @@
 | Story 5 | Title                    | Business Value | Technical Complexity | Priority | Sprint |
 |--------:|--------------------------|----------------|----------------------|----------|--------|
 | 10      | Admin Dashboard Viewing  | High           | Medium               | High     | 2      |
+
+| Story # | Title                       | Business Value | Technical Complexity | Priority | Sprint |
+|--------:|-------------------------------|----------------|----------------------|----------|--------|
+| 12      | Room Maintenance Scheduling  | High           | Medium               | High     | 2      |
