@@ -76,3 +76,58 @@ High
 
 ### Design Notes: 
 - Display room capacity clearly in results
+
+## Story #3: Booking cancellation(employee)
+
+**As a** employee 
+**I want to** filter available rooms based on required seating capacity 
+**So that** i can find a room thats fits all meeting participants
+
+### Acceptance Criteria:
+- [ ] Given I have an existing booking, When I choose to cancel it, Then I am asked to confirm the cancellation
+- [ ] Given I confirm cancellation, When the booking is cancelled, Then the room is released and no longer reserved 
+- [ ] Given a booking is cancelled, When I view my bookings, Then the cancelled booking is no longer listed
+
+### Story Points: 
+3 
+
+### Priority: 
+High 
+
+### Dependencies:
+-  cancel room
+
+### Technical Notes:
+- Rooms capacity data must be stored and searchable
+- Filtering should be performed in real time 
+
+### Design Notes: 
+- Display room capacity clearly in results
+
+## Story #4: Room equipment requirements(employee)
+
+**As a** employee 
+**I want to** filter available rooms based on required equipment 
+**So that** i can select a room that supports my meeting need
+
+### Acceptance Criteria:
+- [ ] Given I am viewing available rooms, When I select required equipment, Then only rooms with that equipment are shown
+- [ ] Given multiple equipment options, When the results are displayed, Then rooms matching all selected results are then shown
+- [ ] Given no rooms meet he equipment requirements, When results are displayed, Then i see a clear ""No Suitable rooms avail" message
+
+### Story Points: 
+3 
+
+### Priority: 
+High 
+
+### Dependencies:
+- view available rooms
+
+### Technical Notes:
+- Rooms equipment attributes must be stored and searchable
+- Filtering logic should support multiple equipment selections 
+
+### Design Notes: 
+- Use checkboxes or multi-select for equipment in room results
+
