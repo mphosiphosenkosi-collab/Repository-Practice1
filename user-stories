@@ -210,3 +210,31 @@ High
 ### Design Notes: 
 - Form should be simple and guide receptionist through necessary fields
 - Display upcoming visitor list clearly on checkin
+
+## Story #8: Booking conflict resolution (Admin)   
+
+**As a** Admin
+**I want to** resolve booking conflicts when multiple users request the same room 
+**So that** room utilization is optimized and double-bookings are prevented
+
+### Acceptance Criteria:
+- [ ] Given multiple conflicting bookings, When I view the admin conflict panel, Then I see all overlapping requests clearly
+- [ ] Given a conflict is identified, When I resolve it, Then the affected bookings are updated and notifications sent to users
+- [ ] Given resolution actions are taken, When the system updates, Then the final room schedule is accurate and consistent
+
+### Story Points: 
+5 
+
+### Priority: 
+High 
+
+### Dependencies:
+- Admin dashboard access
+- Booking system
+
+### Technical Notes:
+- Conflict detection logic must run in real time
+
+### Design Notes: 
+- Conflict resolution interface should allow easy selection of which booking to keep 
+-Conflicts should be visually
