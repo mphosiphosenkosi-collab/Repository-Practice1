@@ -20,3 +20,9 @@
 ## Epic 3: Meeting Visibility
 - Story #4: View Recurring Meetings
 
+# Epic: Conference Room Discovery Enhancements
+
+## Epic 1: Room Search and Filtering
+- Story #1: Filter Rooms by Capacity
+
+
