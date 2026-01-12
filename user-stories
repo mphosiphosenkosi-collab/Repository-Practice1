@@ -134,6 +134,33 @@ High
 ## Story #5: Admin dashboard viewing(Admin)
 
 **As a** admin
+**I want to** View a Dashbord
+**So that** i can monitor usage, spot trends and make data driven decisions
+
+### Acceptance Criteria:
+- [ ] Given I am logged in as an admin, When I open the dashboard, Then I see key metrics (room usage, bookings, cancellations)
+- [ ] Given I am viewing the dashboard, When I filter by date or room, Then metrics update accordingly
+- [ ] Given system events occur (new booking/cancellation), When the dashboard refreshes, Then updated data is displayed
+
+### Story Points: 
+5 
+
+### Priority: 
+High 
+
+### Dependencies:
+- Admin login/Auth for room booking data
+
+### Technical Notes:
+- Dashboard should pull from existing data
+- Ensure data is accurate
+
+### Design Notes: 
+- Visual charts
+
+## Story #6: Room maintenance scheduling (Facilities Manager) 
+
+**As a** Facilities Manager
 **I want to** Vi can monitor usage and make data driven decisions
 
 ### Acceptance Criteria:
@@ -156,3 +183,4 @@ High
 
 ### Design Notes: 
 - Visual charts
+
