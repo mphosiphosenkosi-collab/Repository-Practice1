@@ -49,3 +49,30 @@ High
 
 ### Design Notes: 
 - Recurrence options should be simple and clearly labelled 
+
+## Story #2: Room capacity filtering(employee)
+
+**As a** employee 
+**I want to** filter available rooms based on required seating capacity 
+**So that** i can find a room thats fits all meeting participants
+
+### Acceptance Criteria:
+- [ ] Given I am viewing available rooms, When i enter the number of attendees, Then only rooms with sufficient capacity are displayed
+- [ ] Given no rooms are available that meets capacity, When results are displayed, Then i must see a clear message warning "No suitable rooms available" 
+- [ ] Given i change the count, When the filter is updated, Then rooms lits refreshes accordingly
+
+### Story Points: 
+3 
+
+### Priority: 
+High 
+
+### Dependencies:
+- View available rooms
+
+### Technical Notes:
+- Rooms capacity data must be stored and searchable
+- Filtering should be performed in real time 
+
+### Design Notes: 
+- Display room capacity clearly in results
