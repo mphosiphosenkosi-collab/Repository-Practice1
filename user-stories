@@ -4,15 +4,15 @@
 
 **As a** company employee
 **I want to** view available basic rooms by time and date
-**So that** i find a room that meets my needs and budget
+**So that** i can find a room that meets my needs and budget
 
 ### Acceptance Criteria
 
-- [ ] Given I am logged in, When I select time and date, Then see a list of available rooms
+- [ ] Given I am an authenticated employee, When I select a valid date and time range, Then the system displays all available rooms for that period
 
-- [ ] Given no rooms are available, When I search, Then it means no rooms are available
+- [ ] Given no rooms are available for the selected time, When the search completes, Then I see a clear message stating "No rooms available"
 
-- [ ] Given rooms are available, When search results are displayed, Then rooms are displayed with pricing
+- [ ] Given rooms are available, When search results are displayed, Then each room shows name, capacity and price
 
 ### Story Points
 
@@ -42,11 +42,11 @@ High
 
 ### Acceptance Criteria
 
-- [ ] Given I am creating a meeting, When I select a recurring option, Then I can choose a recurrence pattern (daily, weekly or monthly)
+- [ ] Given I am creating a meeting, When I select a recurring option, Then I can choose (daily, weekly or monthly) recurrence 
 
-- [ ] Given required fields are missing, When I save the meeting, Then all instances are created automatically
+- [ ] Given required all fields are completed, When I save the meeting, Then all recurring instances are created automatically
 
-- [ ] Given required fields are missing, When I save, Then I must see a validation error
+- [ ] Given required fields are missing, When I attempt to save, Then I see a validation error explaining what is missing
 
 ### Story Points
 
@@ -76,11 +76,11 @@ High
 
 ### Acceptance Criteria
 
-- [ ] Given I am viewing available rooms, When I enter the number of attendees, Then only rooms with sufficient capacity are displayed
+- [ ] Given I am viewing available rooms, When I enter the number of attendees, Then only rooms with equal or greater capacity are displayed
 
-- [ ] Given no rooms are available that meet capacity, When results are displayed, Then I must see a clear message warning "No suitable rooms available"
+- [ ] Given no rooms meet the capacity requirement, When results load, Then a "No suitable rooms available" message is displayed
 
-- [ ] Given I change the count, When the filter is updated, Then room list refreshes accordingly
+- [ ] Given I update the attendee count, When the filter changes, Then the room list refreshes immediately 
 
 ### Story Points
 
@@ -128,17 +128,17 @@ High
 
 ### Dependencies
 
-- Cancel room
+- Existing confiremed booking
 
 ### Technical Notes
 
-- Room capacity data must be stored and searchable
+- Booking status must update in real time
 
-- Filtering should be performed in real time
+- Room availability must refresh after cancelation
 
 ### Design Notes
 
-- Display room capacity clearly in results
+- Confirmation dialog required
 
 ## Story #4 Room equipment requirements (employee)
 
@@ -265,7 +265,7 @@ High
 5
 
 ### Priority
-
+ 
 High
 
 ### Dependencies
