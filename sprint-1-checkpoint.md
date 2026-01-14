@@ -15,14 +15,14 @@
 
 ## Blockers
 
-- Resolved: 
-    - Initial understanding of room availability and structure
-    - Clarification of acceptance criteria for recurring meetings
+- Resolved:
+  - Initial understanding of room availability and structure
+  - Clarification of acceptance criteria for recurring meetings
 
 - Outstanding:
-    - External dependency affecting advanced admin functionality
+  - External dependency affecting advanced admin functionality
 
 ## Team Health
 
-- Morale : Fair 
+- Morale : Fair
 - Collaboration : Strong
