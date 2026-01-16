@@ -127,19 +127,35 @@ Document Analysis	Review of existing systems and processes	Legacy system integra
 
 5.2 Stakeholder Engagement Matrix
 Stakeholder Group	Representative	Engagement Frequency	Communication Channel	Decision Authority
-Executive Sponsors	Business Leadership	Monthly	Executive briefings	Strategic approval
-Product Owners	Zanke Ferreira	Daily	Sprint ceremonies, backlog refinement	Requirements prioritization
-End Users	Department Representatives	Bi-weekly	User acceptance testing, feedback sessions	Usability validation
-Development Team	Siphosenkosi, Wendy, Mpho	Daily	Standups, technical discussions	Feasibility assessment
-Technical Architects	Infrastructure Team	Weekly	Architecture review sessions	Technical compliance
+
+Executive Sponsors
+Business Leadership
+Monthly Executive briefings Strategic approval
+
+Product Owners	Zanke Ferreira
+Daily Sprint ceremonies, backlog refinement	Requirements prioritization
+End Users
+Department Representatives	Bi-weekly	User acceptance testing, feedback sessions
+Usability validation
+Development Team
+Siphosenkosi, Wendy, Romio 
+Daily Standups, technical discussions
+
+Feasibility assessment
+Technical Architects
+
+Infrastructure
+ Team Weekly Architecture review sessions Technical compliance
 
 6. Documentation Standards
 
 6.1 User Story Format
 markdown
+
 ## STORY-ID: [Descriptive Title]
 
 ### 1. Metadata
+
 - **ID:** [Unique identifier, e.g., STORY-001]
 - **Priority:** [P0/P1/P2/P3]
 - **Story Points:** [Fibonacci scale estimation]
@@ -235,31 +251,50 @@ Documentation: All changes documented and traceability updated
 8.2 Change Control Board (CCB)
 
 Role	Member	Responsibilities
+
 Chair	Zanke Ferreira (Product Owner)	Final decision authority, business impact assessment
+
 Technical Representative	Siphosenkosi (Lead Developer)	Technical feasibility, implementation effort estimation
+
 Quality Representative	LiMpho (QA Lead)	Testing impact, quality assurance considerations
+
 Process Representative	Romio (Scrum Master)	Process compliance, sprint planning impact
+
 Business Representative	Department Head (Rotating)	Business value assessment, stakeholder impact
 
 8.3 Change Classification
 
-Change Type	Approval Level	Documentation Required	Sprint Impact
-Minor (Cosmetic UI, minor bug fixes)	Product Owner Only	Asana ticket with description	Can be added to current sprint
-Standard (New features, enhancements)	CCB Review	Full change request form	Planned in next sprint
-Major (Architectural changes, scope expansion)	CCB + Business Sponsor	Business case with ROI analysis	Requires re-planning
-Emergency (Critical fixes, security patches)	Product Owner + Technical Lead	Post-implementation documentation	Immediate implementation
+Change Type	Approval Level
+Documentation Required	Sprint Impact
+Minor (Cosmetic UI, minor bug fixes)
+Product Owner Only	Asana ticket with description
+Can be added to current sprint
+Standard (New features, enhancements)
+CCB Review	Full change request form
+
+Planned in next sprint
+Major (Architectural changes, scope expansion)
+CCB + Business Sponsor	Business case with ROI analysis	Requires re-planning
+Emergency (Critical fixes, security patches)
+Product Owner + Technical Lead	Post-implementation documentation	Immediate implementation
 
 9. Traceability Matrix Implementation
+
 9.1 Traceability Relationships
 
 9.2 Traceability Tool Implementation
 
 Traceability Link	Source Artifact	Target Artifact	Tool Implementation	Owner
+
 Objective → Requirement	Business goals document	User story backlog	Asana custom fields	Product Owner
+
 Requirement → Implementation	User stories	GitHub issues/PRs	GitHub Projects integration	Development Team
 Implementation → Test	Code commits	Test cases	Test management tool linking	QA Lead
+
 Test → Requirement	Test results	Requirements validation	Automated test reporting	QA Lead
+
 Change → Impact	Change requests	Affected requirements	Impact analysis documentation	Scrum Master
+
 9.3 Traceability Metrics
 Metric	Target	Measurement Frequency	Reporting Method
 Requirements Coverage	100%	End of each sprint	Traceability matrix report
@@ -272,12 +307,19 @@ Change Impact Visibility	100%	For each change request	Change impact analysis rep
 10.1 Requirements Quality Gates
 
 Gate	Checkpoint	Criteria	Validation Method	Failure Action
+
 Gate 1: Completeness	Elicitation completion	All stakeholder groups consulted	Stakeholder analysis matrix	Schedule additional workshops
+
 Gate 2: Clarity	Documentation review	Zero ambiguous requirements	Peer review with checklist	Clarification sessions
+
 Gate 3: Consistency	Cross-requirement analysis	No conflicting requirements	Dependency mapping review	Conflict resolution workshop
+
 Gate 4: Feasibility	Technical review	All requirements technically feasible	Architecture review session	Requirement refinement
+
 Gate 5: Testability	Test planning	All requirements have verifiable acceptance criteria	Test case creation review	Acceptance criteria refinement
+
 Gate 6: Traceability	Matrix completion	Full traceability established	Traceability matrix audit	Gap analysis and completion
+
 10.2 Compliance Requirements
 Regulation/Standard	Applicable Sections	Compliance Requirements	Verification Method	Responsible Party
 POPIA (South Africa)	Data processing, user consent	User data protection, consent management	Legal review, privacy impact assessment	Product Owner
@@ -286,7 +328,9 @@ GDPR (If applicable)	International data transfer	Data subject rights, breach not
 WCAG 2.1 AA	Accessibility	Screen reader compatibility, keyboard navigation	Automated and manual testing	Frontend Team
 BitCube Security Standards	Internal security policy	Authentication, authorization, audit logging	Security review	Security Team
 Industry Best Practices	N/A	Code quality, testing standards	Peer reviews, automated checks	Development Team
+
 11. Roles & Responsibilities
+
 11.1 Core Requirements Team
 Role	Primary Responsibilities	Key Deliverables	Decision Authority
 Product Owner	Requirements prioritization, business value definition	Product backlog, acceptance criteria	Requirement approval, priority decisions
@@ -295,7 +339,9 @@ Scrum Master	Requirements process facilitation, impediment removal	Process docum
 Lead Developer	Technical feasibility assessment, implementation planning	Technical specifications, effort estimates	Technical feasibility decisions
 QA Lead	Testability assessment, acceptance criteria validation	Test plans, quality metrics	Test readiness, quality gate compliance
 UX Designer	User experience requirements, interface specifications	Wireframes, prototypes, design system	UI/UX standards compliance
+
 11.2 Responsibility Assignment Matrix (RACI)
+
 Activity	Product Owner	Business Analyst	Lead Developer	QA Lead	UX Designer	Scrum Master
 Requirements Elicitation	A	R	C	C	C	I
 Requirements Documentation	A	R	C	C	C	I
