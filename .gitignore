@@ -1,22 +1,683 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
-#launch.json folder
+AL Development Configuration for Conference Room Booking System
+
+Document Type: Technical Configuration Specification
+Project: Conference Room Booking System
+Component: Dynamics 365 Business Central Integration Module
+Document ID: TECH-CONFIG-AL-001
+Version: 1.0
+Effective Date: 2026/01/15
+Prepared By: Siphosenkosi (Lead Developer)
+Reviewed By: Wendy (Frontend Specialist), Mpho (QA Lead)
+Approved By: Romio (Scrum Master)
+Status: Approved for Development
+Classification: Internal Use - Technical Documentation
+
+Table of Contents
+Integration Overview
+
+AL Project Structure
+
+Environment Configuration
+
+Development Workflow
+
+Build & Deployment
+
+Testing Strategy
+
+Version Control Integration
+
+Troubleshooting & Best Practices
+
+Appendices
+
+1. Integration Overview
+1.1 Business Context
+The Conference Room Booking System integrates with Dynamics 365 Business Central to provide:
+
+Room resource management within Business Central's item/resource system
+
+Booking synchronization between web application and Business Central
+
+Financial integration for billing and cost allocation
+
+Employee directory synchronization with Business Central contacts
+
+1.2 Technical Architecture
+text
+Conference Room Booking System Architecture:
+┌─────────────────────────────────────────────────────────┐
+│              Conference Room Web Application            │
+│                 (ASP.NET Core 8 + React 18)            │
+└─────────────────┬──────────────────────────────────────┘
+                  │ REST API Integration
+                  ▼
+┌─────────────────────────────────────────────────────────┐
+│           AL Extension for Dynamics 365 BC              │
+│              (Business Central Integration)             │
+└─────────────────┬──────────────────────────────────────┘
+                  │ Native BC Integration
+                  ▼
+┌─────────────────────────────────────────────────────────┐
+│          Dynamics 365 Business Central                  │
+│            (ERP System - Room Management)               │
+└─────────────────────────────────────────────────────────┘
+1.3 Integration Points
+Integration Point	Purpose	Technology	Owner
+Room Master Data	Sync room information between systems	AL Tables + REST API	Siphosenkosi
+Booking Transactions	Create bookings in BC for accounting	AL Codeunits + Web Services	Wendy
+Employee Directory	User synchronization	AL Pages + API Integration	Mpho
+Financial Postings	Cost allocation and billing	AL Posting Routines	Siphosenkosi
+2. AL Project Structure
+2.1 Directory Layout
+text
+conference-room-booking-system/
+├── src/
+│   ├── backend/                          # ASP.NET Core API
+│   ├── frontend/                         # React Application
+│   └── al-extension/                     # NEW: Business Central AL Extension
+│       ├── .vscode/                      # VS Code configuration
+│       │   ├── launch.json               # Debug configuration
+│       │   ├── settings.json             # AL Language settings
+│       │   └── tasks.json                # Build tasks
+│       ├── .alcache/                     # AL symbol cache
+│       ├── .alpackages/                  # AL package dependencies
+│       ├── .snapshots/                   # Code snapshots
+│       ├── .output/                      # Build output directory
+│       ├── app.json                      # Extension manifest
+│       ├── rad.json                      # Rapid Application Development
+│       ├── RoomBookingSetup.al           # Setup table
+│       ├── RoomResource.al               # Room table/tableextension
+│       ├── BookingManagement.al          # Booking table/page/codeunit
+│       ├── BookingAPI.al                 # Web service API
+│       ├── RoomBookingTest.al            # Test codeunits
+│       ├── RoomBookingInstall.al         # Install codeunit
+│       ├── RoomBookingUpgrade.al         # Upgrade codeunit
+│       ├── Translations/                 # Multi-language support
+│       │   └── RoomBooking.g.xlf         # Base translation file
+│       └── Tests/                        # Test files
+│           ├── RoomBookingTest.Codeunit.al
+│           └── TestResults.xml           # Test results output
+├── tests/                                # Main test suite
+├── docker/                               # Container configurations
+└── docs/                                 # Documentation
+2.2 AL File Organization Standards
+File Type	Naming Convention	Location	Example
+Table/TableExtension	[Feature][Object].al	Root AL directory	RoomResource.al, BookingTable.al
+Page/PageExtension	[Feature][Object]Page.al	Root AL directory	RoomBookingPage.al, BookingCard.al
+Codeunit	[Feature][Purpose].al	Root AL directory	BookingManagement.al, RoomBookingAPI.al
+Test Codeunit	[Feature]Test.Codeunit.al	Tests/ directory	RoomBookingTest.Codeunit.al
+Install/Upgrade	[Extension]Install.al, [Extension]Upgrade.al	Root AL directory	RoomBookingInstall.al
+3. Environment Configuration
+3.1 .gitignore Configuration
+Add to your existing .gitignore file:
+
+gitignore
+### AL Development Configuration ###
+# VS Code AL configuration folder
 .vscode/
-#Cache folder
+
+# AL Cache folder (generated symbols)
 .alcache/
-#Symbols folder
+
+# AL Packages folder (downloaded symbols)
 .alpackages/
-#Snapshots folder
+
+# Snapshots folder (debugging)
 .snapshots/
-#Testing Output folder
+
+# Testing Output folder
 .output/
-#Extension App-file
+
+# Extension App-file
 *.app
-#Rapid Application Development File
+
+# Rapid Application Development File
 rad.json
-#Translation Base-file
+
+# Translation Base-file
 *.g.xlf
-#License-file
+
+# License-file
 *.flf
-#Test results file
+
+# Test results file
 TestResults.xml
+
+# AL compilation artifacts
+*.appSourceCop.json
+*.perTenantExtensionCop.json
+
+# BC Container Helper artifacts
+bccontainerhelper*.json
+3.2 VS Code Configuration (.vscode/settings.json)
+json
+{
+  "al.enableCodeAnalysis": true,
+  "al.codeAnalyzers": [
+    "${CodeCop}",
+    "${UICop}",
+    "${PerTenantExtensionCop}"
+  ],
+  "al.ruleSetPath": "./.vscode/al.ruleset.json",
+  "al.enableExternalRuleSet": true,
+  "al.backgroundCodeAnalysis": true,
+  "al.compileProblem": "Error",
+  "al.defaultLaunchConfiguration": "Your Local BC Server",
+  "al.showGeneratedFiles": false,
+  "al.telemetryDisabled": true,
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/.alcache": true,
+    "**/.alpackages": true,
+    "**/.output": true,
+    "**/.snapshots": true
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000
+}
+3.3 Launch Configuration (.vscode/launch.json)
+json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Publish to Local Business Central",
+      "type": "al",
+      "request": "launch",
+      "server": "http://localhost",
+      "serverInstance": "BC",
+      "port": 7049,
+      "tenant": "default",
+      "authentication": "Windows",
+      "startupObjectId": 22,
+      "startupObjectType": "Page",
+      "schemaUpdateMode": "ForceSync",
+      "breakOnError": true,
+      "launchBrowser": true,
+      "enableLongRunningSqlStatements": true,
+      "enableSqlInformationDebugger": true
+    },
+    {
+      "name": "Publish to Sandbox",
+      "type": "al",
+      "request": "launch",
+      "server": "https://businesscentral.dynamics.com",
+      "serverInstance": "sandbox",
+      "authentication": "UserPassword",
+      "startupObjectId": 22,
+      "startupObjectType": "Page",
+      "schemaUpdateMode": "ForceSync"
+    }
+  ]
+}
+4. Development Workflow
+4.1 Development Environment Setup
+powershell
+# 1. Install prerequisites
+Install-Module BcContainerHelper -Force
+
+# 2. Create local Business Central container
+$containerName = "bc-roombooking-dev"
+$credential = New-Object pscredential 'admin', (ConvertTo-SecureString -String 'P@ssword1' -AsPlainText -Force)
+
+New-BcContainer `
+  -accept_eula `
+  -containerName $containerName `
+  -credential $credential `
+  -licenseFile "C:\Licenses\mylicense.flf" `
+  -artifactUrl (Get-BCArtifactUrl -type Sandbox -country 'us' -select Latest) `
+  -memoryLimit 8G `
+  -includeTestToolkit `
+  -enableTaskScheduler:$false
+
+# 3. Configure AL Language extension in VS Code
+# Install "AL Language" extension from Microsoft
+4.2 Daily Development Process
+bash
+# 1. Start development session
+cd src/al-extension
+
+# 2. Download symbols (dependencies)
+al package cache -packageCachePath ./.alpackages
+
+# 3. Start VS Code with AL workspace
+code .
+
+# 4. Modify AL files and publish changes
+# Use F5 to publish to local container
+
+# 5. Run tests
+al test run -testSuiteName "DEFAULT" -debug
+4.3 AL Coding Standards
+al
+// File Header Template
+// -----------------------------------------------------------------------------
+// Conference Room Booking System
+// AL Extension for Dynamics 365 Business Central
+// File: RoomResource.Table.al
+// Created: 2026-01-15
+// Author: Siphosenkosi
+// Purpose: Room master data table definition
+// -----------------------------------------------------------------------------
+
+table 50100 "Room Resource"
+// Use range 50100-50199 for Conference Room Booking objects
+{
+    Caption = 'Room Resource';
+    DataClassification = ToBeClassified;
+    
+    fields
+    {
+        field(1; "No."; Code[20])
+        {
+            Caption = 'No.';
+            DataClassification = CustomerContent;
+            
+            trigger OnValidate()
+            begin
+                // Validation logic here
+            end;
+        }
+        
+        field(2; Description; Text[100])
+        {
+            Caption = 'Description';
+            DataClassification = CustomerContent;
+        }
+        
+        field(10; Capacity; Integer)
+        {
+            Caption = 'Capacity';
+            DataClassification = CustomerContent;
+            MinValue = 1;
+            MaxValue = 100;
+        }
+        
+        field(20; "Hourly Rate"; Decimal)
+        {
+            Caption = 'Hourly Rate';
+            DataClassification = CustomerContent;
+        }
+    }
+    
+    keys
+    {
+        key(PK; "No.")
+        {
+            Clustered = true;
+        }
+    }
+    
+    // Business logic methods
+    procedure CalculateBookingCost(DurationHours: Decimal): Decimal
+    begin
+        exit("Hourly Rate" * DurationHours);
+    end;
+}
+
+// Page Extension Example
+pageextension 50100 "Resource List Ext" extends "Resource List"
+{
+    layout
+    {
+        addafter(Type)
+        {
+            field(Capacity; Rec.Capacity)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the maximum capacity of the room.';
+            }
+        }
+    }
+    
+    actions
+    {
+        addfirst(processing)
+        {
+            action(ImportRooms)
+            {
+                ApplicationArea = All;
+                Caption = 'Import Rooms';
+                Image = Import;
+                ToolTip = 'Import rooms from Conference Room System';
+                
+                trigger OnAction()
+                begin
+                    Message('Room import functionality');
+                end;
+            }
+        }
+    }
+}
+5. Build & Deployment
+5.1 Build Pipeline Configuration
+yaml
+# .github/workflows/al-build.yml
+name: AL Extension CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/al-extension/**'
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup AL Environment
+      uses: microsoft/AL-Go-Actions/setup@v1
+      
+    - name: Download Symbols
+      run: |
+        cd src/al-extension
+        al package cache --packageCachePath ./.alpackages
+        
+    - name: Build Extension
+      run: |
+        cd src/al-extension
+        al package --project . --out .output/roombooking.app
+      
+    - name: Run Tests
+      run: |
+        cd src/al-extension
+        al test run --testSuiteName "DEFAULT" --resultsFile .output/TestResults.xml
+      
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: al-extension
+        path: src/al-extension/.output/
+        
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: AL Tests
+        path: src/al-extension/.output/TestResults.xml
+        reporter: junit
+5.2 Deployment Strategy
+Environment	Deployment Method	Purpose	Access
+Development	Manual publish (F5)	Local development & testing	Developers only
+Test	Azure DevOps Pipeline	Integration testing	QA Team
+UAT	App Package Upload	User acceptance testing	Business Users
+Production	AppSource Deployment	Live system	All Users
+5.3 App Manifest (app.json)
+json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "Conference Room Booking",
+  "publisher": "BitCube Development",
+  "version": "1.0.0.0",
+  "brief": "Conference room booking integration for Business Central",
+  "description": "Integrates conference room booking capabilities with Dynamics 365 Business Central for resource management and financial tracking.",
+  "privacyStatement": "https://bitcube.dev/privacy",
+  "EULA": "https://bitcube.dev/eula",
+  "help": "https://bitcube.dev/help/roombooking",
+  "url": "https://bitcube.dev",
+  "logo": "Logo.png",
+  "dependencies": [
+    {
+      "id": "63ca2fa4-4f03-4f2b-a480-172fef340d3f",
+      "name": "System Application",
+      "publisher": "Microsoft",
+      "version": "20.0.0.0"
+    },
+    {
+      "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "name": "Base Application",
+      "publisher": "Microsoft",
+      "version": "20.0.0.0"
+    }
+  ],
+  "screenshots": [],
+  "platform": "20.0.0.0",
+  "application": "20.0.0.0",
+  "idRanges": [
+    {
+      "from": 50100,
+      "to": 50149
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://bitcube.dev/help/",
+  "showMyCode": true,
+  "runtime": "10.0",
+  "features": [
+    "NoImplicitWith",
+    "GenerateCaptions"
+  ]
+}
+6. Testing Strategy
+6.1 Test Structure
+al
+// RoomBookingTest.Codeunit.al
+codeunit 50110 "Room Booking Test"
+{
+    Subtype = Test;
+    
+    var
+        LibraryAssert: Codeunit "Library Assert";
+        RoomResource: Record "Room Resource";
+        Any: Codeunit Any;
+        
+    [Test]
+    procedure TestRoomCreation()
+    var
+        RoomNo: Code[20];
+    begin
+        // [SCENARIO] Create a new room resource
+        // [GIVEN] No room exists
+        RoomResource.DeleteAll();
+        
+        // [WHEN] Creating a new room
+        RoomNo := Any.AlphanumericText(10);
+        CreateRoom(RoomNo, 'Conference Room A', 10, 50.00);
+        
+        // [THEN] Room should exist
+        LibraryAssert.IsTrue(RoomResource.Get(RoomNo), 'Room should be created');
+        LibraryAssert.AreEqual('Conference Room A', RoomResource.Description, 'Description should match');
+    end;
+    
+    [Test]
+    procedure TestCapacityValidation()
+    var
+        RoomNo: Code[20];
+    begin
+        // [SCENARIO] Validate room capacity constraints
+        // [GIVEN] A room with capacity 10
+        RoomNo := Any.AlphanumericText(10);
+        CreateRoom(RoomNo, 'Test Room', 10, 50.00);
+        
+        // [WHEN] Setting invalid capacity
+        asserterror RoomResource.Validate(Capacity, 0);
+        
+        // [THEN] Error should be raised
+        LibraryAssert.ExpectedError('must be greater than 0');
+    end;
+    
+    local procedure CreateRoom(RoomNo: Code[20]; Description: Text[100]; Capacity: Integer; HourlyRate: Decimal)
+    begin
+        RoomResource.Init();
+        RoomResource."No." := RoomNo;
+        RoomResource.Description := Description;
+        RoomResource.Capacity := Capacity;
+        RoomResource."Hourly Rate" := HourlyRate;
+        RoomResource.Insert(true);
+    end;
+}
+6.2 Test Categories
+Test Category	Purpose	Example Tests	Owner
+Unit Tests	Validate individual functions/methods	TestRoomCreation, TestCapacityValidation	Developers
+Integration Tests	Validate component interactions	TestBookingCreationFlow, TestAPIIntegration	QA Team
+Performance Tests	Validate system performance under load	TestBulkRoomImport, TestConcurrentBookings	Performance Team
+Security Tests	Validate security controls	TestPermissionSets, TestDataIsolation	Security Team
+6.3 Test Execution Commands
+bash
+# Run all tests
+al test run -testSuiteName "DEFAULT"
+
+# Run specific test codeunit
+al test run -codeunit 50110
+
+# Run tests with coverage
+al test run -testSuiteName "DEFAULT" -enableCodeCoverage
+
+# Generate test results in XML format
+al test run -testSuiteName "DEFAULT" -resultsFile TestResults.xml
+7. Version Control Integration
+7.1 Git Workflow for AL Development
+bash
+# Feature branch workflow
+git checkout -b feature/room-booking-integration
+git add src/al-extension/
+git commit -m "feat: add room booking AL extension
+
+## CHANGES
+- Add Room Resource table (50100) with capacity and rate fields
+- Create Room Booking page extension for Resource List
+- Implement Booking Management codeunit for API integration
+- Add test suite with 85% code coverage
+
+## TECHNICAL DETAILS
+- Object range: 50100-50149 reserved for Conference Room Booking
+- Integration: REST API endpoints for web application sync
+- Security: Permission sets for room administrators
+
+## VALIDATION
+- All tests passing (42/42)
+- Code analysis: 0 warnings, 0 errors
+- Manual testing completed in BC Sandbox"
+
+# Create pull request for review
+git push -u origin feature/room-booking-integration
+7.2 Code Review Checklist for AL
+Naming conventions follow AL standards
+
+Object IDs within allocated range (50100-50149)
+
+Error handling implemented for all external calls
+
+Security considerations addressed (permission sets)
+
+Test coverage > 80% for new code
+
+Documentation includes XML comments
+
+Performance considerations for bulk operations
+
+Backward compatibility maintained for upgrades
+
+8. Troubleshooting & Best Practices
+8.1 Common Issues & Solutions
+Issue	Symptoms	Solution
+Symbols not loading	"Could not find package" errors	Run al package cache in AL directory
+Publish failures	Error 500 on publish	Check BC service running; restart container
+Test failures	Tests pass locally but fail in CI	Ensure test isolation; use Any codeunit
+Performance issues	Slow page loads in BC	Add indexes; optimize AL queries
+Upgrade failures	Data migration errors	Implement upgrade codeunits with error handling
+8.2 AL Development Best Practices
+Use explicit variable declaration: Avoid implicit with statements
+
+Implement error handling: Use if not Rec.Find() then exit; patterns
+
+Optimize database calls: Minimize loops with record sets
+
+Follow security patterns: Use permission sets for data access
+
+Document complex logic: Add comments for business rules
+
+Test edge cases: Include boundary value tests
+
+Plan for upgrades: Always include upgrade codeunits
+
+Monitor performance: Use SQL profiling for slow queries
+
+8.3 Performance Optimization Tips
+al
+// BAD: Nested loops with database calls
+for i := 1 to 10 do begin
+    if Customer.FindSet() then
+        repeat
+            // Process each customer
+        until Customer.Next() = 0;
+end;
+
+// GOOD: Single database call
+if Customer.FindSet() then
+    repeat
+        for i := 1 to 10 do begin
+            // Process each customer
+        end;
+    until Customer.Next() = 0;
+9. Appendices
+9.1 Object ID Allocation
+Object Type	ID Range	Purpose	Owner
+Tables	50100-50119	Room and booking master data	Siphosenkosi
+Pages	50120-50139	User interface pages	Wendy
+Codeunits	50140-50149	Business logic and APIs	Mpho
+Reports	50150-50159	Reporting functionality	Team
+XMLPorts	50160-50169	Data import/export	Siphosenkosi
+9.2 Required Dependencies
+Dependency	Version	Purpose	Installation Method
+AL Language Extension	10.0+	VS Code development	VS Code Marketplace
+BC Container Helper	Latest	Local container management	PowerShell Gallery
+Docker Desktop	4.0+	Container runtime	Docker website
+Business Central	20.0+	Target platform	Microsoft
+9.3 Team Skills Matrix
+Team Member	AL Experience	Training Needs	Specialization
+Siphosenkosi	Advanced	None	Backend integration, APIs
+Wendy	Intermediate	Page design, AL controls	UI/UX, Page development
+Mpho	Beginner	Test framework, AL debugging	Testing, Quality assurance
+Romio	Basic	Project setup, deployment	Process, CI/CD pipelines
+9.4 Reference Documentation
+AL Documentation: Microsoft Docs
+
+BC Container Helper: GitHub Repository
+
+AL Language Extension: VS Code Marketplace
+
+AppSource Validation: Technical Validation Checklist
+
+9.5 Support Contacts
+Issue Type	Contact	Response Time	Escalation Path
+AL Development	Siphosenkosi	< 4 hours	Romio
+BC Environment	Infrastructure Team	< 2 hours	Romio
+Testing Issues	Mpho	< 8 hours	Wendy
+Deployment Issues	Romio	< 1 hour	Zanke Ferreira
+Implementation Timeline
+Phase 1: Foundation (Week 1-2)
+Set up AL development environment
+
+Create basic AL project structure
+
+Implement Room Resource table
+
+Create initial test suite
+
+Phase 2: Integration (Week 3-4)
+Implement booking synchronization
+
+Create API integration codeunits
+
+Develop user interface pages
+
+Complete test coverage
+
+Phase 3: Deployment (Week 5)
+Set up CI/CD pipeline
+
+Perform UAT testing
+
+Prepare AppSource submission
+
+Document deployment procedures
+
+BitCube Development Standards Compliance: ✅
+This configuration follows BitCube AL Development Standards v2.1
+"Enterprise integration requires enterprise-grade development practices."
