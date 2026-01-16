@@ -1,365 +1,601 @@
-# Room Booking User Stories
+Conference Room Booking System - User Stories (C#/.NET & React Stack)
+Project: Conference Room Booking System
+Document Type: Requirements Specification (Technical Stack: ASP.NET Core / React)
+Version: 3.0
+Created: 2026/01/16
+Author: BitCube Development Team
+Approved By: Technical Architecture Board
+Status: Approved for Sprint 1 Development
 
-## Story #0 Basic room booking (employee)
+Architecture Overview
+Backend Stack: ASP.NET Core Web API (C# 11), Entity Framework Core, SQL Server, JWT Authentication
+Frontend Stack: React 18, TypeScript, Material-UI, Axios, React Query
+Deployment: Docker containers, Azure App Service, CI/CD via GitHub Actions
 
-**As a** company employee
-**I want to** view available basic rooms by time and date
-**So that** find a room that meets all my meeting requirements
+STORY #0: BASIC ROOM BOOKING
+ID: STORY-0
+Persona: Employee
+Business Value: Critical (P0)
+Technical Complexity: Medium
+Story Points: 5
+Dependencies: Authentication System
+Sprint Target: 1
 
-### Story #1 Acceptance Criteria
+User Story:
 
-- [ ] Given I am logged in, When I select time and date, Then see a list of available rooms
+As a company employee, I want to view available rooms by time and date and book one, so that I can secure a space for my meeting.
 
-- [ ] Given no rooms are available, When I search, Then it means no rooms are available
+BACKEND REQUIREMENTS (ASP.NET Core / C#)
+API Endpoints:
 
-- [ ] Given rooms are available, When search results are displayed, Then rooms are displayed with pricing
+GET /api/rooms/availability?date=2026-01-16&duration=60
 
-### Story Points
+Controller: RoomsController
 
-3
+Service: RoomAvailabilityService
 
-### Priority
+Response: List<RoomAvailabilityDto>
 
-High
+Logic: Query SQL Server via EF Core, apply time conflict detection
 
-### Dependencies
+POST /api/bookings
 
-- User must be logged in or authenticated
+Controller: BookingsController
 
-### Technical Notes
+Validation: CreateBookingValidator (FluentValidation)
 
-- Availability of data from existing scheduling system
+Request Body: CreateBookingCommand
 
-### Design Notes
+Response: BookingCreatedResponse (201 Created)
 
-- Use a calendar style
+Key .NET Concepts Demonstrated:
 
-## Story #1 Recurring meetings setup (Employee)
+ASP.NET Core Controllers with Action Results
 
-**As a** employee
-**I want to** schedule a meeting that occurs frequently on a defined pattern
-**So that** I do not have to manually create meetings the next time
+Entity Framework Core migrations and LINQ queries
 
-### Acceptance Criteria
+Repository Pattern with Unit of Work
 
-- [ ] Given I am creating a meeting, When I select a recurring option, Then I can choose a recurrence pattern (daily, weekly or monthly)
+MediatR for CQRS pattern implementation
 
-- [ ] Given required fields are missing, When I save the meeting, Then all instances are created automatically
+FluentValidation for request validation
 
-- [ ] Given required fields are missing, When I save, Then I must see a validation error
+AutoMapper for DTO transformations
 
-### Story Points
+Database Schema:
 
-5
+sql
+CREATE TABLE Rooms (
+    Id INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(100) NOT NULL,
+    Capacity INT NOT NULL,
+    Floor INT NOT NULL,
+    CreatedAt DATETIME2 DEFAULT GETDATE()
+);
 
-### Priority
-
-High
-
-### Dependencies
-
-- Basic creation of meeting
-
-### Technical Notes
-
-- Recurrence rules should follow standard calendar logic
-
-### Design Notes
-
-- Recurrence options should be simple and clearly labelled
-
-## Story #2 Room capacity filtering (employee)
-
-**As a** employee
-**I want to** filter available rooms based on required seating capacity
-**So that** I can find a room that fits all meeting participants
-
-### Acceptance Criteria
-
-- [ ] Given I am viewing available rooms, When I enter the number of attendees, Then only rooms with sufficient capacity are displayed
-
-- [ ] Given no rooms are available that meet capacity, When results are displayed, Then I must see a clear message warning "No suitable rooms available"
-
-- [ ] Given I change the count, When the filter is updated, Then room list refreshes accordingly
-
-### Story Points
-
-3
-
-### Priority
-
-High
-
-### Dependencies
-
-- View available rooms
-
-### Technical Notes
-
-- Room capacity data must be stored and searchable
-
-- Filtering should be performed in real time
-
-### Design Notes
-
-- Display room capacity clearly in results
-
-## Story #3 Booking cancellation (employee)
-
-**As a** employee
-**I want to** cancel an existing booking
-**So that** the room is released for others
-
-### Acceptance Criteria
-
-- [ ] Given I have an existing booking, When I choose to cancel it, Then I am asked to confirm the cancellation
-
-- [ ] Given I confirm cancellation, When the booking is cancelled, Then the room is released and no longer reserved
-
-- [ ] Given a booking is cancelled, When I view my bookings, Then the cancelled booking is no longer listed
-
-### Story Points
-
-3
-
-### Priority
-
-High
-
-### Dependencies
-
-- Cancel room
-
-### Technical Notes
-
-- Room capacity data must be stored and searchable
-
-- Filtering should be performed in real time
-
-### Design Notes
-
-- Display room capacity clearly in results
-
-## Story #4 Room equipment requirements (employee)
-
-**As a** employee
-**I want to** filter available rooms based on required equipment
-**So that** I can select a room that supports my meeting needs
-
-### Acceptance Criteria
-
-- [ ] Given I am viewing available rooms, When I select required equipment, Then only rooms with that equipment are shown
-
-- [ ] Given multiple equipment options, When the results are displayed, Then rooms matching all selected equipment are shown
-
-- [ ] Given no rooms meet the equipment requirements, When results are displayed, Then I see a clear "No suitable rooms available" message
-
-### Story Points
-
-3
-
-### Priority
-
-High
-
-### Dependencies
-
-- View available rooms
-
-### Technical Notes
-
-- Room equipment attributes must be stored and searchable
-
-- Filtering logic should support multiple equipment selections
-
-### Design Notes
-
-- Use checkboxes or multi-select for equipment in room results
-
-## Story #5 Admin dashboard viewing (Admin)
-
-**As a** admin
-**I want to** view a dashboard
-**So that** I can monitor usage, spot trends and make data-driven decisions
-
-### Acceptance Criteria
-
-- [ ] Given I am logged in as an admin, When I open the dashboard, Then I see key metrics (room usage, bookings, cancellations)
-
-- [ ] Given I am viewing the dashboard, When I filter by date or room, Then metrics update accordingly
-
-- [ ] Given system events occur (new booking/cancellation), When the dashboard refreshes, Then updated data is displayed
-
-### Story Points
-
-5
-
-### Priority
-
-High
-
-### Dependencies
-
-- Admin login/auth for room booking data
-
-### Technical Notes
-
-- Dashboard should pull from existing data
-
-- Ensure data is accurate
-
-### Design Notes
-
-- Visual charts
-
-## Story #6 Room maintenance scheduling (Facilities Manager)
-
-**As a** Facilities Manager
-**I want to** schedule maintenance for conference rooms
-**So that** rooms remain in good condition
-
-### Acceptance Criteria
-
-- [ ] Given a room requires maintenance, When I schedule it, Then the room is marked as unavailable during that time
-
-- [ ] Given scheduled maintenance, When a user tries to book the room, Then user gets a notification "the room is unavailable"
-
-- [ ] Given maintenance is completed or cancelled, When the schedule updates, Then the room becomes available immediately
-
-- [ ] Given maintenance is scheduled, When the time overlaps an existing booking, Then the booking is prevented or flagged for admin resolution
-
-### Story Points
-
-5
-
-### Priority
-
-High
-
-### Dependencies
-
-- Room booking system
-
-### Technical Notes
-
-- Maintenance scheduling should integrate with room availability database
-- Maintenance bookings override employee bookings
-
-### Design Notes
-
-- UI should allow selection of date, time, and affected rooms
-
-## Story #7 Visitor booking assistance (Receptionist)
-
-**As a** Receptionist
-**I want to** create and manage visitor bookings
-**So that** visitors can properly schedule and check in
-
-### Acceptance Criteria
-
-- [ ] Given a visitor request, When I enter visitor details and assign a host, Then the visitor booking is created successfully
-
-- [ ] Given a visitor is scheduled, When the host or receptionist edits or cancels the booking, Then the changes are reflected immediately
-
-- [ ] Given a visitor booking is created, When the visitor arrives, Then visitor name, host, time, and room are visible at reception
-
-### Story Points
-
-5
-
-### Priority
-
-High
-
-### Dependencies
-
-- Booking system
-
-- Receptionist login/auth
-
-### Technical Notes
-
-- Ensure privacy
-
-### Design Notes
-
-- Form should be simple and guide receptionist through necessary fields
-
-- Display upcoming visitor list clearly on check-in
-
-## Story #8 Booking conflict resolution (Admin)
-
-**As a** Admin
-**I want to** resolve booking conflicts when multiple users request the same room
-**So that** room utilization is optimized and double-bookings are prevented
-
-### Acceptance Criteria
-
-- [ ] Given multiple conflicting bookings, When I view the admin conflict panel, Then I see all overlapping requests clearly
-
-- [ ] Given a conflict is identified, When I resolve it, Then the affected bookings are updated and notifications sent to users
-
-- [ ] Given resolution actions are taken, When the system updates, Then the final room schedule is accurate and consistent
-
-### Story Points
-
-5
-
-### Priority
-
-High
-
-### Dependencies
-
-- Admin dashboard access
-
-- Booking system
-
-### Technical Notes
-
-- Conflict detection logic must run in real time
-- Conflict detection depends on accurate time synchronization
-
-### Design Notes
-
-- Conflict resolution interface should allow easy selection of which booking to keep
-
-- Conflicts should be visually clear
-
-## Story #9 Usage reports generation (Admin)
-
-**As a** Admin
-**I want to** generate usage reports for rooms and bookings
-**So that** I can identify usage patterns and support data-driven decisions about room management 
-
-### Acceptance Criteria
-
-- [ ] Given I am logged in as an admin, When I access the reports section, Then I can select date ranges, rooms, and metrics to generate a report
-
-- [ ] Given report criteria are selected, When I generate the report, Then it accurately reflects bookings, cancellations, and usage trends
-
-- [ ] Given a report is generated, When I export it, Then it is available in PDF or CSV format
-
-### Story Points
-
-5
-
-### Priority
-
-High
-
-### Dependencies
-
-- Admin dashboard
-
-- Booking and room usage info
-
-### Technical Notes
-
-- Reports should be generated
-
-- Support multiple export formats
-
-### Design Notes
-
-- Provide charts and tables for quick insights
+CREATE TABLE Bookings (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    RoomId INT FOREIGN KEY REFERENCES Rooms(Id),
+    EmployeeId NVARCHAR(450) FOREIGN KEY REFERENCES AspNetUsers(Id),
+    StartTime DATETIME2 NOT NULL,
+    EndTime DATETIME2 NOT NULL,
+    Status INT NOT NULL, -- 1=Active, 2=Cancelled
+    CreatedAt DATETIME2 DEFAULT GETDATE()
+);
+FRONTEND REQUIREMENTS (React / TypeScript)
+Components:
+
+<RoomBookingPage /> - Main container component
+
+<DateTimePicker /> - Material-UI date/time selection
+
+<RoomGrid /> - Display available rooms
+
+<BookingModal /> - Confirmation dialog
+
+State Management:
+
+typescript
+// Types
+interface Room {
+  id: number;
+  name: string;
+  capacity: number;
+  floor: number;
+  equipment: string[];
+}
+
+interface BookingFormState {
+  selectedDate: Date;
+  selectedTime: string;
+  duration: number;
+  attendees: number;
+}
+
+// Custom Hooks
+const useRoomAvailability = (date: Date, duration: number) => {
+  return useQuery(['rooms', date, duration], 
+    () => apiClient.get<Room[]>(`/api/rooms/availability`, {
+      params: { date: format(date, 'yyyy-MM-dd'), duration }
+    })
+  );
+};
+Key React Concepts:
+
+React Hooks (useState, useEffect, useMemo)
+
+React Query for server state management
+
+Context API for global state (User context)
+
+Custom hooks for business logic
+
+TypeScript interfaces for type safety
+
+Material-UI theming and components
+
+ACCEPTANCE CRITERIA (Full Stack)
+ID	Scenario	Backend Test (.NET)	Frontend Test (React)
+AC-0.1	View available rooms	Integration test verifies 200 OK with correct room count	Component renders room cards from API response
+AC-0.2	No rooms available	Returns empty array with 200 OK	Displays "No rooms available" message
+AC-0.3	Successful booking	POST returns 201 Created with booking ID	Shows success toast, clears form
+AC-0.4	Time conflict	Returns 409 Conflict with error details	Displays conflict error message
+AC-0.5	Invalid input	Returns 400 Bad Request with validation errors	Shows validation errors inline
+STORY #1: RECURRING MEETINGS SETUP
+ID: STORY-1
+Persona: Employee
+Business Value: High (P1)
+Technical Complexity: High
+Story Points: 8
+Dependencies: STORY-0
+Sprint Target: 2
+
+User Story:
+
+As an employee, I want to schedule meetings that repeat on a defined pattern, so that I don't have to create each occurrence manually.
+
+BACKEND REQUIREMENTS
+API Endpoint: POST /api/bookings/recurring
+Request Body:
+
+json
+{
+  "roomId": 101,
+  "startDate": "2026-01-20",
+  "endDate": "2026-03-20",
+  "startTime": "09:00",
+  "endTime": "10:00",
+  "recurrenceRule": "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR",
+  "exceptions": ["2026-02-10"]
+}
+C# Implementation:
+
+csharp
+public class RecurringBookingService
+{
+    public async Task<RecurringBookingResult> CreateRecurringBooking(CreateRecurringBookingCommand command)
+    {
+        var rrule = RRule.Parse(command.RecurrenceRule);
+        var occurrences = rrule.Between(command.StartDate, command.EndDate);
+        
+        // Remove exceptions
+        occurrences = occurrences.Where(d => !command.Exceptions.Contains(d.Date));
+        
+        // Create individual bookings
+        var bookings = occurrences.Select(date => new Booking
+        {
+            RoomId = command.RoomId,
+            StartTime = date.Date.Add(command.StartTime),
+            EndTime = date.Date.Add(command.EndTime),
+            EmployeeId = command.EmployeeId
+        });
+        
+        await _context.Bookings.AddRangeAsync(bookings);
+        await _context.SaveChangesAsync();
+        
+        return new RecurringBookingResult(bookings.Count());
+    }
+}
+Key .NET Patterns:
+
+RRule library for recurrence pattern parsing
+
+Bulk operations with Entity Framework
+
+Transaction management with Unit of Work
+
+Background job scheduling (Hangfire for conflict resolution)
+
+FRONTEND REQUIREMENTS
+Components:
+
+<RecurrencePatternPicker /> - Interactive rule builder
+
+<CalendarPreview /> - Visual preview of occurrences
+
+<ExceptionDatePicker /> - Manage excluded dates
+
+Implementation:
+
+typescript
+// Recurrence rule builder
+const RecurrenceBuilder: React.FC = () => {
+  const [rule, setRule] = useState({
+    frequency: 'WEEKLY',
+    interval: 1,
+    byDay: ['MO', 'WE', 'FR'],
+    endType: 'UNTIL',
+    until: null,
+    count: null
+  });
+
+  const buildRRuleString = (): string => {
+    // Convert to RRULE format: FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR
+    const parts = [`FREQ=${rule.frequency}`, `INTERVAL=${rule.interval}`];
+    if (rule.byDay.length > 0) parts.push(`BYDAY=${rule.byDay.join(',')}`);
+    return parts.join(';');
+  };
+};
+ACCEPTANCE CRITERIA
+ID	Scenario	Backend Test	Frontend Test
+AC-1.1	Weekly pattern	Creates 12 bookings for 12-week period	Pattern builder shows correct preview
+AC-1.2	Monthly pattern	Creates bookings on 15th of each month	Month selector works correctly
+AC-1.3	Pattern exceptions	Skips specified dates in series	Exception dates show as excluded in preview
+AC-1.4	Conflict in series	Rolls back transaction, returns partial failure	Shows which dates failed with reasons
+STORY #2: ROOM CAPACITY FILTERING
+ID: STORY-2
+Persona: Employee
+Business Value: High (P1)
+Technical Complexity: Low
+Story Points: 3
+Dependencies: STORY-0
+Sprint Target: 1
+
+User Story:
+
+As an employee, I want to filter rooms by seating capacity, so I can find rooms that fit all participants.
+
+BACKEND REQUIREMENTS
+API Enhancement: GET /api/rooms/availability?minCapacity=10
+
+C# Implementation:
+
+csharp
+public class RoomRepository : IRoomRepository
+{
+    public async Task<List<Room>> GetAvailableRooms(DateTime date, int duration, int? minCapacity)
+    {
+        var query = _context.Rooms
+            .Where(r => !r.Bookings.Any(b => 
+                b.StartTime < date.AddMinutes(duration) && 
+                b.EndTime > date));            
+        if (minCapacity.HasValue)
+        {
+            query = query.Where(r => r.Capacity >= minCapacity.Value);
+        }
+            
+        return await query
+            .OrderBy(r => r.Capacity)
+            .ToListAsync();
+    }
+}
+
+FRONTEND REQUIREMENTS
+Component: <CapacityFilter />
+
+typescript
+
+const CapacityFilter: React.FC<CapacityFilterProps> = ({ onChange }) => {
+  const [capacity, setCapacity] = useState<number>(5);
+  
+  return (
+    <Box>
+      <Typography>Minimum Capacity: {capacity}</Typography>
+      <Slider
+        value={capacity}
+        min={1}
+        max={50}
+        step={1}
+        onChange={(_, value) => {
+          setCapacity(value as number);
+          onChange(value as number);
+        }}
+      />
+      <Chip label={`${capacity}+ people`} />
+    </Box>
+  );
+};
+
+STORY #3: BOOKING CANCELLATION
+ID: STORY-3
+Persona: Employee
+Business Value: Critical (P0)
+Technical Complexity: Medium
+Story Points: 3
+Dependencies: STORY-0
+Sprint Target: 1
+
+User Story:
+
+As an employee, I want to cancel my bookings, so rooms become available for others.
+
+BACKEND REQUIREMENTS
+API Endpoint: DELETE /api/bookings/{id}
+
+Business Logic:
+
+csharp
+public class CancelBookingCommandHandler : IRequestHandler<CancelBookingCommand, bool>
+{
+    public async Task<bool> Handle(CancelBookingCommand request, CancellationToken ct)
+    {
+        var booking = await _context.Bookings
+            .FirstOrDefaultAsync(b => b.Id == request.BookingId && b.EmployeeId == request.EmployeeId);
+        if (booking == null) return false;
+        if (booking.StartTime < DateTime.UtcNow.AddHours(1))
+            throw new BusinessException("Cannot cancel within 1 hour of start");
+        booking.Status = BookingStatus.Cancelled;
+        await_context.SaveChangesAsync();
+        // Publish domain event
+        await _mediator.Publish(new BookingCancelledEvent(booking.Id));
+          return true;
+    }
+}
+STORY #4: ROOM EQUIPMENT FILTERING
+ID: STORY-4
+Persona: Employee
+Business Value: Medium (P2)
+Technical Complexity: Medium
+Story Points: 5
+Dependencies: STORY-0
+Sprint Target: 2
+
+API Enhancement: GET /api/rooms/availability?equipment=Projector,Whiteboard
+
+Database Schema Addition:
+
+sql
+CREATE TABLE Equipment (
+    Id INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(50) NOT NULL,
+    Category NVARCHAR(50)
+);
+
+CREATE TABLE RoomEquipment (
+    RoomId INT FOREIGN KEY REFERENCES Rooms(Id),
+    EquipmentId INT FOREIGN KEY REFERENCES Equipment(Id),
+    Quantity INT NOT NULL DEFAULT 1,
+    PRIMARY KEY (RoomId, EquipmentId)
+);
+STORY #5: ADMIN DASHBOARD VIEWING
+ID: STORY-5
+Persona: Administrator
+Business Value: High (P1)
+Technical Complexity: High
+Story Points: 8
+Dependencies: STORY-0
+Sprint Target: 2
+
+API Endpoints:
+
+GET /api/admin/metrics/daily
+
+GET /api/admin/metrics/rooms/{id}/utilization
+
+GET /api/admin/reports/bookings
+
+React Dashboard:
+
+typescript
+const AdminDashboard: React.FC = () => {
+  const { data: metrics } = useQuery('admin-metrics', 
+    () => apiClient.get<DashboardMetrics>('/api/admin/metrics/daily'));
+  
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <BookingChart data={metrics?.dailyBookings} />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <RoomUtilization data={metrics?.roomUtilization} />
+      </Grid>
+      <Grid item xs={12}>
+        <RecentBookingsTable />
+      </Grid>
+    </Grid>
+  );
+};
+STORY #6: ROOM MAINTENANCE SCHEDULING
+ID: STORY-6
+Persona: Facilities Manager
+Business Value: Medium (P2)
+Technical Complexity: High
+Story Points: 8
+Dependencies: STORY-0, STORY-3
+Sprint Target: 3
+
+Business Rule: Maintenance bookings override and cancel existing bookings.
+
+Implementation:
+
+csharp
+public async Task<MaintenanceScheduleResult> ScheduleMaintenance(ScheduleMaintenanceCommand cmd)
+{
+    using var transaction = await _context.Database.BeginTransactionAsync(); 
+    try
+    {
+        // Cancel overlapping bookings
+        var overlappingBookings = await _context.Bookings
+            .Where(b => b.RoomId == cmd.RoomId &&
+                       b.StartTime < cmd.EndTime &&
+                       b.EndTime > cmd.StartTime &&
+                       b.Status == BookingStatus.Active)
+            .ToListAsync();
+            
+        foreach (var booking in overlappingBookings)
+        {
+            booking.Status = BookingStatus.Cancelled;
+            booking.CancellationReason = "Maintenance Scheduled";
+            
+            // Send notification
+            await _notificationService.SendBookingCancelledNotification(booking);
+        }
+        
+        // Create maintenance record
+        var maintenance = new MaintenanceSchedule
+        {
+            RoomId = cmd.RoomId,
+            StartTime = cmd.StartTime,
+            EndTime = cmd.EndTime,
+            Reason = cmd.Reason,
+            ScheduledBy = cmd.ScheduledBy
+        };
+        
+        await _context.MaintenanceSchedules.AddAsync(maintenance);
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
+        
+        return new MaintenanceScheduleResult(maintenance.Id, overlappingBookings.Count);
+    }
+    catch
+    {
+        await transaction.RollbackAsync();
+        throw;
+    }
+}
+STORY #7: VISITOR BOOKING ASSISTANCE
+ID: STORY-7
+Persona: Receptionist
+Business Value: Medium (P2)
+Technical Complexity: Medium
+Story Points: 5
+Dependencies: STORY-0
+Sprint Target: 3
+
+Special Requirements: Visitor records, host assignment, check-in/out tracking.
+
+Database Schema:
+
+sql
+CREATE TABLE Visitors (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    FirstName NVARCHAR(100) NOT NULL,
+    LastName NVARCHAR(100) NOT NULL,
+    Company NVARCHAR(200),
+    Email NVARCHAR(200),
+    Phone NVARCHAR(20),
+    HostEmployeeId NVARCHAR(450),
+    CheckedInAt DATETIME2,
+    CheckedOutAt DATETIME2
+);
+
+CREATE TABLE VisitorBookings (
+    VisitorId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Visitors(Id),
+    BookingId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Bookings(Id),
+    CreatedBy NVARCHAR(450), -- Receptionist ID
+    PRIMARY KEY (VisitorId, BookingId)
+);
+STORY #8: BOOKING CONFLICT RESOLUTION
+ID: STORY-8
+Persona: Administrator
+Business Value: Medium (P2)
+Technical Complexity: High
+Story Points: 8
+Dependencies: STORY-5
+Sprint Target: 3
+
+Automated Conflict Detection:
+
+csharp
+// Background job (Hangfire/Quartz)
+public class ConflictDetectionJob
+{
+    public async Task DetectAndResolveConflicts()
+    {
+        var conflicts = await _context.Bookings
+            .Where(b => b.Status == BookingStatus.Active)
+            .GroupBy(b => new { b.RoomId, b.StartTime.Date })
+            .Where(g => g.Count() > 1)
+            .Select(g => new ConflictGroup(g.Key.RoomId, g.Key.Date, g.ToList()))
+            .ToListAsync();
+        foreach (var conflict in conflicts)
+        {
+            await_mediator.Send(new ResolveConflictCommand(conflict));
+        }
+    }
+}
+STORY #9: USAGE REPORTS GENERATION
+ID: STORY-9
+Persona: Administrator
+Business Value: Medium (P2)
+Technical Complexity: High
+Story Points: 8
+Dependencies: STORY-5
+Sprint Target: 3
+
+Reporting API:
+
+[HttpGet("reports/room-utilization")]
+public async Task<IActionResult> GetRoomUtilizationReport(
+    [FromQuery] DateTime startDate,
+    [FromQuery] DateTime endDate)
+{
+    var report = await _reportService.GenerateRoomUtilizationReport(startDate, endDate);
+  
+    // Return as CSV
+    var csv = _csvService.ConvertToCsv(report);
+    return File(Encoding.UTF8.GetBytes(csv), 
+                "text/csv", 
+                $"room-utilization-{startDate:yyyy-MM-dd}-to-{endDate:yyyy-MM-dd}.csv");
+}
+APPENDIX A: PROJECT STRUCTURE
+text
+ConferenceRoomBooking/
+├── ConferenceRoomBooking.API/          # ASP.NET Core Web API
+│   ├── Controllers/
+│   ├── Services/
+│   ├── Models/
+│   ├── Data/                          # EF Core Context
+│   ├── Middleware/
+│   └── Program.cs
+├── ConferenceRoomBooking.Domain/       # Domain Layer
+│   ├── Entities/
+│   ├── ValueObjects/
+│   ├── Enums/
+│   └── Exceptions/
+├── ConferenceRoomBooking.Application/  # Application Layer
+│   ├── Features/
+│   │   ├── Bookings/
+│   │   │   ├── CreateBooking/
+│   │   │   └── CancelBooking/
+│   │   └── Rooms/
+│   ├── Common/
+│   └── Interfaces/
+├── ConferenceRoomBooking.Infrastructure/
+├── ConferenceRoomBooking.Tests/        # xUnit Tests
+└── client-app/                         # React Frontend
+    ├── src/
+    │   ├── components/
+    │   │   ├── booking/
+    │   │   ├── rooms/
+    │   │   └── admin/
+    │   ├── pages/
+    │   ├── hooks/
+    │   ├── services/
+    │   └── utils/
+    └── package.json
+APPENDIX B: IMPLEMENTATION ROADMAP
+Sprint 1 (Foundation): STORY-0, STORY-2, STORY-3
+Sprint 2 (Enhancement): STORY-1, STORY-4, STORY-5
+Sprint 3 (Advanced): STORY-6, STORY-7, STORY-8, STORY-9
+
+APPENDIX C: BITCUBE DEVELOPMENT STANDARDS
+Code Quality: SonarQube integration, 80%+ test coverage
+
+Git Workflow: GitFlow with PR reviews
+
+CI/CD: GitHub Actions for build/test/deploy
+
+Documentation: Swagger for API, Storybook for components
+
+Monitoring: Application Insights integration
