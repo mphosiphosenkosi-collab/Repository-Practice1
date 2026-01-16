@@ -345,13 +345,16 @@ User Satisfaction	N/A	4.0/5.0 in initial feedback
 11. Appendices
 
 11.1 Team Contact Information
+
 Team Member	Role	Email	Phone	Hours of Availability
+
 Zanke Ferreira	Product Owner	zanke@bitcube.dev	+27 XX XXX XXXX	08:00 - 17:00
 Romio	Scrum Master	romio@bitcube.dev	+27 XX XXX XXXX	08:00 - 17:00
 Siphosenkosi	Lead Developer	siphosenkosi@bitcube.dev	+27 XX XXX XXXX	08:00 - 17:00
 Wendy Frontend Specialist wendy@bitcube.dev	+27 XX XXX XXXX	08:00 - 17:00
 
 11.2 Technical References
+
 API Documentation: docs/api/specification.md
 
 Database Schema: docs/architecture/database-schema.md
