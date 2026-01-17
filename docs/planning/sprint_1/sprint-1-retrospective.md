@@ -74,7 +74,7 @@ Start-Stop-Continue framework with evidence from daily standups and sprint outco
 ### 3.2 Sprint 2 Improvements
 
 - Break down stories into smaller, more specific tasks
-- Implement visual progress tracking board
+- Implement visual progress tracking boardm
 - Introduce code review checklist
 - Establish testing criteria before story completion
 - Create dependency mapping for interrelated stories
