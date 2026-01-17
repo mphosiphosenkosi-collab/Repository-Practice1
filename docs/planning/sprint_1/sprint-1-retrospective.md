@@ -64,6 +64,7 @@ Start-Stop-Continue framework with evidence from daily standups and sprint outco
 ### 3.1 Immediate Actions
 
 | Action Item | Owner | Due Date | Success Criteria |
+
 |-------------|-------|----------|-----------------|
 | Create standardized task breakdown template | Romio | 2026/01/16 | Template used for all Sprint 2 stories |
 | Implement shared development journal | Team | 2026/01/17 | Daily updates logged by all team members |
