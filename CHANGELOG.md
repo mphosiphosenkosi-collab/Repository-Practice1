@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release: "Enterprise Standards Compliance"
 
-### Added
+** Added
 
 - **REQ-FRAMEWORK-001 v2.0** - Complete Requirements Management Framework
 - Comprehensive requirements governance hierarchy
@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Complete RACI matrix for requirements team
 - Tool stack configuration and artifact repository structure
 
-### Changed
+** Changed
 
 - **BREAKING**: Complete overhaul of documentation standards to BitCube Enterprise v3.2
 - Enhanced Requirements Lifecycle Management with defined quality gates
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized requirement templates and acceptance criteria format
 - Updated stakeholder engagement matrix with decision authorities
 
-### Fixed
+** Fixed
 
 - All typographical errors in documentation (cocumaantantion → documentation)
 - Broken table formatting and inconsistent styling
@@ -74,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incomplete document control information
 - Missing approval workflows and signature sections
 
-### Security
+** Security
 
 - Added compliance requirements section covering POPIA/GDPR
 - Implemented security approval matrix for requirement types
@@ -86,21 +86,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release: "Team Collaboration Enhancement"
 
-### Added
+** Added
 
 - Team feedback integration into REQ-FRAMEWORK-001
 - Cross-functional review checkpoints
 - Collaborative ownership principles documentation
 - Sprint planning impact assessment guidelines
 
-### Changed
+** Changed
 
 - Enhanced stakeholder analysis methodology
 - Refined user story acceptance criteria format
 - Updated elicitation techniques based on team input
 - Improved requirements validation workflow
 
-### Fixed
+** Fixed
 
 - Clarified ambiguous requirement descriptions
 - Resolved conflicting priority definitions
@@ -112,7 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release: "Project Foundation"
 
-### Added
+** Added
 
 - **REQ-FRAMEWORK-001 v1.0** - Initial Requirements Management Framework
 - Project charter and business objectives documentation
@@ -121,11 +121,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic requirements lifecycle definition
 - Initial documentation standards
 
-### Changed
+** Changed
 
 - N/A (Initial release)
-
-### Fixed
+** Fixed
 
 - N/A (Initial release)
 
@@ -172,4 +171,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 *This changelog complies with BitCube Enterprise Documentation Standards v3.2*
-*Last Updated: 2026-01-15 by Zanke Ferreira*
+*Last Updated: 2026-01-15 by Siphosenkosi*
