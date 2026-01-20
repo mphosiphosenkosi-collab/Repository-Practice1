@@ -100,20 +100,24 @@ cp .env.example .env
 Edit .env with these REQUIRED values:
 
 env
-## === DATABASE CONFIGURATION ===
+
+=== DATABASE CONFIGURATION ===
+
 DB_SERVER=localhost,1433
 DB_NAME=ConferenceRoomBooking
 DB_USER=sa
 DB_PASSWORD=YourStrong!Passw0rd  # CHANGE THIS IN PRODUCTION
 
-## === JWT AUTHENTICATION ===
+=== JWT AUTHENTICATION ===
+
 JWT_SECRET=your-256-bit-secret-minimum-32-characters  # GENERATE: openssl rand -base64 32
 JWT_EXPIRE_MINUTES=1440
 
-## === REDIS CACHE ===
+ === REDIS CACHE ===
+
 REDIS_CONNECTION=localhost:6379
 
-## === APPLICATION SETTINGS ===
+ === APPLICATION SETTINGS ===
 
 ASPNETCORE_ENVIRONMENT=Development
 FRONTEND_URL=http://localhost:3000
@@ -161,6 +165,7 @@ conference-room-booking-system/
 └── docs/                        # Project Documentation
 
 🧪 Testing & Quality
+
 Running Test Suites
 Test Type	Command	Coverage Report	Purpose
 Backend Unit	dotnet test --filter Category=Unit	/test-results/unit-coverage	Business logic validation
