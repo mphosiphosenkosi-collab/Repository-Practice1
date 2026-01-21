@@ -1,0 +1,426 @@
+openapi: 3.0.3
+info:
+  title: Conference Room Booking System API
+  description: |
+    **Primary Developer**: Siphosenkosi
+    **Project**: BitCube Professional Training - Module 4.3
+    **Purpose**: This is the formal contract for the Conference Room Booking System. It defines all endpoints for managing rooms, bookings, and availability.
+  version: 1.0.0
+  contact:
+    name: Siphosenkosi
+    email: siphosenkosi@bitcube.ac.za
+
+servers:
+  - url: https://api.staging.bitcube.ac.za/v1
+    description: Staging environment for testing
+  - url: https://api.bitcube.ac.za/v1
+    description: Production environment
+
+paths:
+  # ========== ROOMS ENDPOINTS (3) ==========
+  /rooms:
+    get:
+      summary: List all available rooms
+      description: Retrieves a list of all active conference rooms. Can be filtered.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: minCapacity
+          in: query
+          schema:
+            type: integer
+          description: Filter by minimum room capacity
+        - name: hasProjector
+          in: query
+          schema:
+            type: boolean
+          description: Filter rooms that have a projector
+      responses:
+        '200':
+          description: Successfully retrieved room list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+        '401':
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+    post:
+      summary: Create a new room (Admin)
+      description: Adds a new conference room to the system. Requires admin privileges.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomCreate'
+      responses:
+        '201':
+          description: Room created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid request data
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Admin access required
+
+  /rooms/{id}:
+    get:
+      summary: Get a specific room
+      description: Retrieves detailed information for a single room by its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The unique ID of the room
+      responses:
+        '200':
+          description: Room details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '404':
+          description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  # ========== BOOKINGS ENDPOINTS (4) ==========
+  /bookings:
+    get:
+      summary: List all bookings
+      description: Retrieves bookings, optionally filtered by user or room.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+          description: Filter bookings by user ID
+        - name: roomId
+          in: query
+          schema:
+            type: integer
+          description: Filter bookings by room ID
+      responses:
+        '200':
+          description: List of bookings retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '401':
+          description: Unauthorized
+
+    post:
+      summary: Create a new booking
+      description: Books a conference room for a specific time period.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingCreate'
+      responses:
+        '201':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          headers:
+            Location:
+              description: URL of the new booking
+              schema:
+                type: string
+        '400':
+          description: Invalid data or time in the past
+        '409':
+          description: Conflict - Room already booked for that time
+        '404':
+          description: Room not found
+
+  /bookings/{id}:
+    get:
+      summary: Get a specific booking
+      description: Retrieves details for a single booking by its ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Booking details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found
+
+    delete:
+      summary: Cancel a booking
+      description: Cancels an existing booking. Users can only cancel their own bookings.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Booking successfully cancelled (no content)
+        '403':
+          description: Forbidden - Cannot cancel another user's booking
+        '404':
+          description: Booking not found
+
+  # ========== AVAILABILITY ENDPOINTS (2) ==========
+  /availability:
+    get:
+      summary: Check room availability
+      description: Finds rooms available for a given time period.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: startTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Start of the desired time slot (ISO format)
+        - name: endTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: End of the desired time slot (ISO format)
+        - name: minCapacity
+          in: query
+          schema:
+            type: integer
+          description: Filter for rooms with minimum capacity
+      responses:
+        '200':
+          description: List of available rooms for the slot
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid time parameters (e.g., end before start)
+
+  /availability/rooms/{id}:
+    get:
+      summary: Check availability for a specific room
+      description: Checks if a specific room is available for a given time period.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The room ID to check
+        - name: startTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Availability status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isAvailable:
+                    type: boolean
+                    example: true
+                  conflictingBooking:
+                    $ref: '#/components/schemas/Booking'
+        '404':
+          description: Room not found
+
+components:
+  schemas:
+    # === REUSABLE SCHEMAS ===
+    Room:
+      type: object
+      required:
+        - id
+        - name
+        - capacity
+        - isActive
+      properties:
+        id:
+          type: integer
+          example: 101
+          description: Unique room identifier
+        name:
+          type: string
+          example: "Boardroom Alpha"
+        capacity:
+          type: integer
+          example: 12
+          description: Maximum number of occupants
+        isActive:
+          type: boolean
+          example: true
+          description: Whether the room can be booked
+        hasProjector:
+          type: boolean
+          example: true
+        hasWhiteboard:
+          type: boolean
+          example: true
+        location:
+          type: string
+          example: "Floor 5, North Wing"
+
+    RoomCreate:
+      type: object
+      required:
+        - name
+        - capacity
+      properties:
+        name:
+          type: string
+        capacity:
+          type: integer
+        hasProjector:
+          type: boolean
+          default: false
+        hasWhiteboard:
+          type: boolean
+          default: false
+        location:
+          type: string
+
+    Booking:
+      type: object
+      required:
+        - id
+        - roomId
+        - userId
+        - title
+        - startTime
+        - endTime
+        - status
+      properties:
+        id:
+          type: integer
+          example: 5001
+        roomId:
+          type: integer
+          example: 101
+        userId:
+          type: string
+          example: "user_abc123"
+        title:
+          type: string
+          example: "Team Stand-up"
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [CONFIRMED, CANCELLED]
+          example: "CONFIRMED"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    BookingCreate:
+      type: object
+      required:
+        - roomId
+        - title
+        - startTime
+        - endTime
+      properties:
+        roomId:
+          type: integer
+        title:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        notes:
+          type: string
+
+    ApiError:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          example: "ROOM_NOT_FOUND"
+        message:
+          type: string
+          example: "The requested resource was not found."
+        details:
+          type: string
+          example: "Room with ID 999 does not exist in the database."
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-01-20T14:30:00Z"
+
+  # === AUTHENTICATION DEFINITION ===
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Enter your JWT token in the format: `Bearer <token>`
+        Example: `Bearer eyJhbGciOiJIUzI1NiIs...`
