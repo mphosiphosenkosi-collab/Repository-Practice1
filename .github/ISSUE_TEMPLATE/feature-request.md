@@ -1,27 +1,37 @@
 ---
-name: Ì≤° Feature Request
-description: Propose improvements or new features
+name: üí° Feature Request
+about: Propose improvements or new features
 title: "[FEATURE]: "
 labels: ["enhancement", "triage"]
+assignees: ""
 ---
+**Problem Statement**
+What problem are you facing that this feature would solve?
 
-## ÌæØ What problem will this solve?
-*What difficulty are you facing?*
+**Proposed Solution**
+Describe your ideal solution or feature.
 
-## Ì≤° What's your idea?
-*Describe your suggested solution*
+**Alternative Solutions**
+What other approaches have you considered?
 
-## Ì≥à Why is this important?
-- **For users**:
-- **For the project**:
-- **For developers**:
+**Benefits**
+- User benefit: 
+- Project benefit:
+- Developer benefit:
 
-## ‚úÖ What needs to be done?
-- [ ] Step 1
-- [ ] Step 2
-- [ ] Step 3
+**Examples/Mockups**
+If applicable, add screenshots, mockups, or links to similar features.
 
-## ‚è±Ô∏è How urgent?
-- [ ] **Now** - Essential for next release
-- [ ] **Soon** - Important improvement
-- [ ] **Later** - Nice to have
+**Acceptance Criteria**
+- [ ] Criteria 1
+- [ ] Criteria 2
+- [ ] Criteria 3
+
+**Priority**
+- [ ] Critical - Essential for MVP
+- [ ] High - Significant value
+- [ ] Medium - Nice to have
+- [ ] Low - Future consideration
+
+**Additional Context**
+Any other information that might help understand this request.

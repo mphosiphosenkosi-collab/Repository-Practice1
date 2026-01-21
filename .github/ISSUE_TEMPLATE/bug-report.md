@@ -1,28 +1,37 @@
 ---
-name: í°› Bug Report
-description: Report unexpected or incorrect system behavior
+name: ğŸ› Bug Report
+description: Report when something isn't working correctly
 title: "[BUG]: "
-labels: ["bug", "triage"]
+labels: ["bug"]
+assignees: ""
 ---
 
-## í°› What's wrong?
-*Describe the problem clearly*
+## ğŸ” What's the problem?
 
-## í´ How to see it again?
-1. 
-2. 
-3. 
+*Briefly describe what's not working
+
+## ğŸ“‹ How to make it happen again?
+
+1.
+2.
+3.
 
 ## âœ… What should happen?
 
+*Describe the correct behavior
+
 ## âŒ What actually happens?
 
-## í²» Your Environment
-- **Device**: 
-- **OS**: 
-- **Browser**: 
+*Describe the wrong behavior
 
-## í¾¯ How serious?
-- [ ] **Critical** - Blocks everything
-- [ ] **Major** - Important feature broken
-- [ ] **Minor** - Annoying but usable
+## ğŸ’» Your Environment
+
+- **Device**: [e.g., Laptop, Phone]
+- **OS**: [e.g., Windows, Mac]
+- **Browser**: [e.g., Chrome, Firefox]
+
+## ğŸ¯ How serious is this?
+
+- [ ] **Critical** - Can't use the system
+- [ ] **Major** - Important feature broken  
+- [ ] **Minor** - Small issue, can work around it
