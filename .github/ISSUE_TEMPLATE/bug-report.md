@@ -1,4 +1,6 @@
 ---
+name: 🐛 Bug Report
+description: Report when something isn't working correctly
 name: "Bug Report"
 about: "Report unexpected or incorrect system behavior in the Conference Room Booking System"
 title: "[BUG]: "
@@ -19,6 +21,23 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+*Describe the correct behavior
+
+## ❌ What actually happens?
+
+*Describe the wrong behavior
+
+## 💻 Your Environment
+
+- **Device**: [e.g., Laptop, Phone]
+- **OS**: [e.g., Windows, Mac]
+- **Browser**: [e.g., Chrome, Firefox]
+
+## 🎯 How serious is this?
+
+- [ ] **Critical** - Can't use the system
+- [ ] **Major** - Important feature broken  
+- [ ] **Minor** - Small issue, can work around it
 **Actual behavior**
 What actually happened instead.
 
