@@ -1,0 +1,8 @@
+{
+  "/v1/rooms": "/rooms",
+  "/v1/rooms/:id": "/rooms/:id",
+  "/v1/bookings": "/bookings",
+  "/v1/bookings/:id": "/bookings/:id",
+  "/v1/availability": "/rooms",
+  "/v1/availability/rooms/:id": "/rooms/:id"
+}

@@ -11,6 +11,8 @@ info:
     email: siphosenkosi@bitcube.ac.za
 
 servers:
+  - url: http://localhost:3000/v1
+    description: Local development server
   - url: https://api.staging.bitcube.ac.za/v1
     description: Staging environment for testing
   - url: https://api.bitcube.ac.za/v1
@@ -27,11 +29,13 @@ paths:
       parameters:
         - name: minCapacity
           in: query
+          required: false
           schema:
             type: integer
           description: Filter by minimum room capacity
         - name: hasProjector
           in: query
+          required: false
           schema:
             type: boolean
           description: Filter rooms that have a projector
@@ -41,9 +45,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Room'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+                  timestamp:
+                    type: string
+                    format: date-time
         '401':
           description: Unauthorized - Invalid or missing token
           content:
@@ -68,13 +81,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Room'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    $ref: '#/components/schemas/Room'
+                  message:
+                    type: string
+                    example: "Room created successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
         '400':
           description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '403':
           description: Forbidden - Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /rooms/{id}:
     get:
@@ -88,6 +125,7 @@ paths:
           required: true
           schema:
             type: integer
+            example: 101
           description: The unique ID of the room
       responses:
         '200':
@@ -95,7 +133,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Room'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    $ref: '#/components/schemas/Room'
+                  timestamp:
+                    type: string
+                    format: date-time
         '404':
           description: Room not found
           content:
@@ -113,11 +160,13 @@ paths:
       parameters:
         - name: userId
           in: query
+          required: false
           schema:
             type: string
           description: Filter bookings by user ID
         - name: roomId
           in: query
+          required: false
           schema:
             type: integer
           description: Filter bookings by room ID
@@ -127,11 +176,24 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Booking'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Booking'
+                  timestamp:
+                    type: string
+                    format: date-time
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
     post:
       summary: Create a new booking
@@ -147,21 +209,46 @@ paths:
       responses:
         '201':
           description: Booking created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Booking'
           headers:
             Location:
               description: URL of the new booking
               schema:
                 type: string
+                example: "/bookings/5001"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    $ref: '#/components/schemas/Booking'
+                  message:
+                    type: string
+                    example: "Booking created successfully"
+                  timestamp:
+                    type: string
+                    format: date-time
         '400':
           description: Invalid data or time in the past
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '409':
           description: Conflict - Room already booked for that time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '404':
           description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /bookings/{id}:
     get:
@@ -175,15 +262,30 @@ paths:
           required: true
           schema:
             type: integer
+            example: 5001
+          description: The booking ID
       responses:
         '200':
           description: Booking details retrieved
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Booking'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    $ref: '#/components/schemas/Booking'
+                  timestamp:
+                    type: string
+                    format: date-time
         '404':
           description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
     delete:
       summary: Cancel a booking
@@ -196,13 +298,23 @@ paths:
           required: true
           schema:
             type: integer
+            example: 5001
+          description: The booking ID
       responses:
         '204':
           description: Booking successfully cancelled (no content)
         '403':
           description: Forbidden - Cannot cancel another user's booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '404':
           description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   # ========== AVAILABILITY ENDPOINTS (2) ==========
   /availability:
@@ -214,20 +326,23 @@ paths:
       parameters:
         - name: startTime
           in: query
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
+            example: "2026-01-22T10:00:00Z"
           description: Start of the desired time slot (ISO format)
         - name: endTime
           in: query
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
+            example: "2026-01-22T11:00:00Z"
           description: End of the desired time slot (ISO format)
         - name: minCapacity
           in: query
+          required: false
           schema:
             type: integer
           description: Filter for rooms with minimum capacity
@@ -237,11 +352,42 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Room'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        isAvailable:
+                          type: boolean
+                        availableSlots:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              startTime:
+                                type: string
+                                format: date-time
+                              endTime:
+                                type: string
+                                format: date-time
+                  timestamp:
+                    type: string
+                    format: date-time
         '400':
           description: Invalid time parameters (e.g., end before start)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /availability/rooms/{id}:
     get:
@@ -255,19 +401,22 @@ paths:
           required: true
           schema:
             type: integer
+            example: 101
           description: The room ID to check
         - name: startTime
           in: query
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
+            example: "2026-01-22T10:00:00Z"
         - name: endTime
           in: query
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
+            example: "2026-01-22T11:00:00Z"
       responses:
         '200':
           description: Availability status retrieved
@@ -276,13 +425,26 @@ paths:
               schema:
                 type: object
                 properties:
-                  isAvailable:
-                    type: boolean
-                    example: true
-                  conflictingBooking:
-                    $ref: '#/components/schemas/Booking'
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      isAvailable:
+                        type: boolean
+                        example: true
+                      conflictingBooking:
+                        $ref: '#/components/schemas/Booking'
+                  timestamp:
+                    type: string
+                    format: date-time
         '404':
           description: Room not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
 components:
   schemas:
@@ -319,6 +481,15 @@ components:
         location:
           type: string
           example: "Floor 5, North Wing"
+        hourlyRate:
+          type: number
+          format: float
+          example: 50.0
+        amenities:
+          type: array
+          items:
+            type: string
+          example: ["Projector", "Whiteboard", "Video Conference"]
 
     RoomCreate:
       type: object
@@ -328,16 +499,23 @@ components:
       properties:
         name:
           type: string
+          example: "Innovation Lab"
         capacity:
           type: integer
+          example: 20
         hasProjector:
           type: boolean
-          default: false
+          example: true
         hasWhiteboard:
           type: boolean
-          default: false
+          example: true
         location:
           type: string
+          example: "Floor 6, Innovation Wing"
+        hourlyRate:
+          type: number
+          format: float
+          example: 75.0
 
     Booking:
       type: object
@@ -365,9 +543,11 @@ components:
         startTime:
           type: string
           format: date-time
+          example: "2026-01-22T10:00:00Z"
         endTime:
           type: string
           format: date-time
+          example: "2026-01-22T11:00:00Z"
         status:
           type: string
           enum: [CONFIRMED, CANCELLED]
@@ -375,7 +555,10 @@ components:
         createdAt:
           type: string
           format: date-time
-          readOnly: true
+          example: "2026-01-21T14:30:00Z"
+        notes:
+          type: string
+          example: "Daily team synchronization meeting"
 
     BookingCreate:
       type: object
@@ -387,20 +570,31 @@ components:
       properties:
         roomId:
           type: integer
+          example: 101
+        userId:
+          type: string
+          example: "user_abc123"
         title:
           type: string
+          example: "Team Stand-up"
         startTime:
           type: string
           format: date-time
+          example: "2026-01-22T10:00:00Z"
         endTime:
           type: string
           format: date-time
+          example: "2026-01-22T11:00:00Z"
         notes:
           type: string
+          example: "Need projector for presentation"
 
     ApiError:
       type: object
       properties:
+        status:
+          type: string
+          example: "error"
         errorCode:
           type: string
           example: "ROOM_NOT_FOUND"
@@ -413,7 +607,7 @@ components:
         timestamp:
           type: string
           format: date-time
-          example: "2024-01-20T14:30:00Z"
+          example: "2026-01-22T14:30:00Z"
 
   # === AUTHENTICATION DEFINITION ===
   securitySchemes:
@@ -424,3 +618,7 @@ components:
       description: >
         Enter your JWT token in the format: `Bearer <token>`
         Example: `Bearer eyJhbGciOiJIUzI1NiIs...`
+
+  # === SECURITY REQUIREMENTS ===
+security:
+  - BearerAuth: []

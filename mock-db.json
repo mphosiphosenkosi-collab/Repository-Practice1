@@ -1,0 +1,44 @@
+{
+  "rooms": [
+    {
+      "id": 101,
+      "name": "Boardroom Alpha",
+      "capacity": 12,
+      "isActive": true,
+      "hasProjector": true,
+      "hasWhiteboard": true,
+      "location": "Floor 5, North Wing"
+    },
+    {
+      "id": 102,
+      "name": "Meeting Room Beta", 
+      "capacity": 6,
+      "isActive": true,
+      "hasProjector": false,
+      "hasWhiteboard": true,
+      "location": "Floor 3, South Wing"
+    }
+  ],
+  "bookings": [
+    {
+      "id": 5001,
+      "roomId": 101,
+      "userId": "user_abc123",
+      "title": "Team Stand-up",
+      "startTime": "2026-01-22T10:00:00Z",
+      "endTime": "2026-01-22T11:00:00Z",
+      "status": "CONFIRMED",
+      "createdAt": "2026-01-21T14:30:00Z"
+    },
+    {
+      "id": 5002,
+      "roomId": 102,
+      "userId": "user_def456",
+      "title": "Client Meeting",
+      "startTime": "2026-01-22T14:00:00Z",
+      "endTime": "2026-01-22T15:30:00Z",
+      "status": "CONFIRMED",
+      "createdAt": "2026-01-21T16:45:00Z"
+    }
+  ]
+}
